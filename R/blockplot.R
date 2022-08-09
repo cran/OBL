@@ -18,7 +18,13 @@
 #'
 #' @importFrom forecast auto.arima forecast accuracy
 #'
+#' @importFrom forcats fct_reorder
+#'
 #' @importFrom foreach `%dopar%` foreach
+#'
+#' @importFrom dplyr mutate
+#'
+#' @importFrom ggplot2 ggplot aes geom_point geom_segment scale_color_manual theme_bw
 #'
 #' @importFrom utils head tail
 #'
@@ -31,10 +37,10 @@
 #' @examples
 #'   set.seed(289805)
 #'   ts <- arima.sim(n = 3, model = list(ar = 0.8, order = c(1, 0, 0)), sd = 1)
-#'   blockboot(ts = ts, R = 2, seed = 6, n_cores = 1)
+#'   lolliblock(ts, R = 2, seed = 6, n_cores = 1)
 #'
 #' @export
-blockboot <- function(ts, R, seed, n_cores, methods = c("optnbb", "optmbb", "optcbb", "opttmbb", "opttcbb")){
+lolliblock <- function(ts, R, seed, n_cores, methods = c("optnbb", "optmbb", "optcbb", "opttmbb", "opttcbb")){
   #To ignore the warnings during usage use the first 2 lines
   suppressWarnings('non')#options(warn = -1)
   options("getSymbols.warning4.0" = FALSE)
@@ -240,10 +246,16 @@ blockboot <- function(ts, R, seed, n_cores, methods = c("optnbb", "optmbb", "opt
   }
 
   df <- list(nbb = data.frame(output$nbb.lb, output$nbb.RMSE), mbb = data.frame(output$mbb.lb, output$mbb.RMSE), cbb = data.frame(output$cbb.lb, output$cbb.RMSE), tmbb = data.frame(output$tmbb.lb, output$tmbb.RMSE), tcbb = data.frame(output$tcbb.lb, output$tcbb.RMSE))
-
   df1 <- do.call(rbind, lapply(df, function(x) data.frame(lb = x[which.min(x[,2]), 1], RMSE = min(x[, 2])))) |>
     tibble::rownames_to_column("Methods")
-  #parallel::stopCluster(cl)#doParallel::stopImplicitCluster(cl) #parallel::stopCluster(cl)#closeAllConnections()
-  df1
-}
 
+  df1 |>
+    dplyr::mutate(colour = forcats::fct_reorder(df1$Methods, df1$RMSE)) |>
+    ggplot2::ggplot(ggplot2::aes(df1$Methods, df1$RMSE, colour = df1$colour)) +
+    ggplot2::geom_point(size = 4) +
+    ggplot2::geom_segment(ggplot2::aes(df1$Methods, xend = df1$Methods, yend = df1$RMSE, y = 0)) +
+    ggplot2::scale_color_manual(values = c("green", "yellowgreen", "yellow",
+                                           "orange", "red"),
+                                labels = c(9, 8, 9, 9, 4), name = "lb") +
+    ggplot2::theme_bw(base_size = 16)
+}

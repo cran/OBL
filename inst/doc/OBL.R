@@ -15,14 +15,21 @@ library(OBL)
 #  install.packages("devtools")
 #  devtools::install_github("sta189332/OBL")
 
-## ----usage, include = TRUE, eval = FALSE--------------------------------------
+## ----usage_blockboot, include = TRUE, eval = FALSE----------------------------
 #  blockboot(ts,
 #            R,
 #           seed,
 #           n_cores,
 #           methods = c("optnbb", "optmbb", "optcbb", "opttmbb", "opttcbb"))
 
-## ----simulate, include = TRUE, eval = FALSE-----------------------------------
+## ----usage_lolliblock, include = TRUE, eval = FALSE---------------------------
+#  lolliblock(ts,
+#            R,
+#           seed,
+#           n_cores,
+#           methods = c("optnbb", "optmbb", "optcbb", "opttmbb", "opttcbb"))
+
+## ----simulate1, include = TRUE, eval = FALSE----------------------------------
 #  # simulate univariate time series data
 #  set.seed(289805)
 #  ts <- arima.sim(n = 10, model = list(ar = 0.8, order = c(1, 0, 0)), sd = 1)
@@ -34,4 +41,11 @@ library(OBL)
 #  #3     cbb  8 0.2031448
 #  #4    tmbb  4 0.2654746
 #  #5    tcbb  9 0.4048711
+
+## ----simulate2, include = TRUE, eval = FALSE----------------------------------
+#  # simulate univariate time series data
+#  set.seed(289805)
+#  ts <- arima.sim(n = 10, model = list(ar = 0.8, order = c(1, 0, 0)), sd = 1)
+#  # get the optimal block length table
+#  OBL::lolliblock(ts = ts, R = 100, seed = 6, n_cores = 2)
 

@@ -473,8 +473,16 @@ be easy to use as well. As a result of the such a need,
 <code>OBL: Optimum Block Lengt</code> package is created to solve such
 problem. <code>OBL: Optimum Block Length</code> package helps users to
 search for the best block length and the best method that has the
-minimum RMSE value. It can then be used blockboot function produces a
-data frame with three (3) column (Method, lb &amp; RMSE).</p>
+minimum RMSE value.<br />
+blockboot function produces a data frame with three (3) column (Method,
+lb &amp; RMSE).</p>
+<p>lolliblock function is another function that can plot the lollipop
+chart of the data frame displays by the blockboot function. It shows the
+optimum block lengths, for each method with different colours ranging
+from red to green. While red shows the method with worst performance
+(method with the highest RMSE) the green colour shows the method with
+the smallest RMSE. The corresponding block length of each methods as a
+<strong>legend</strong> with their matching colours.</p>
 </div>
 <div id="usage" class="section level2">
 <h2>Usage</h2>
@@ -486,6 +494,14 @@ the <code>ts</code> which should be a univirate time series data and
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>         seed,</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>         n_cores,</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">methods =</span> <span class="fu">c</span>(<span class="st">&quot;optnbb&quot;</span>, <span class="st">&quot;optmbb&quot;</span>, <span class="st">&quot;optcbb&quot;</span>, <span class="st">&quot;opttmbb&quot;</span>, <span class="st">&quot;opttcbb&quot;</span>))</span></code></pre></div>
+<p>While the minimum arguments in the function <code>lolliblock()</code>
+can be the <code>ts</code> which should be a univirate time series data
+and <code>R</code> which is the numbers of replicate of resapling.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lolliblock</span>(ts,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>          R,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>         seed,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>         n_cores,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">methods =</span> <span class="fu">c</span>(<span class="st">&quot;optnbb&quot;</span>, <span class="st">&quot;optmbb&quot;</span>, <span class="st">&quot;optcbb&quot;</span>, <span class="st">&quot;opttmbb&quot;</span>, <span class="st">&quot;opttcbb&quot;</span>))</span></code></pre></div>
 <div id="argument" class="section level3">
 <h3>Argument</h3>
 <div class="columns">
@@ -512,17 +528,31 @@ follows: “optnbb”, “optmbb”, “optcbb”, “opttmbb”, “opttcbb”<
 </div>
 <div id="examples" class="section level3">
 <h3>Examples</h3>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># simulate univariate time series data</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">289805</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>ts <span class="ot">&lt;-</span> <span class="fu">arima.sim</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">model =</span> <span class="fu">list</span>(<span class="at">ar =</span> <span class="fl">0.8</span>, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>)), <span class="at">sd =</span> <span class="dv">1</span>) </span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># get the optimal block length table</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>OBL<span class="sc">::</span><span class="fu">blockboot</span>(<span class="at">ts =</span> ts, <span class="at">R =</span> <span class="dv">100</span>, <span class="at">seed =</span> <span class="dv">6</span>, <span class="at">n_cores =</span> <span class="dv">2</span>)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#  Methods lb      RMSE</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#1     nbb  9 0.2402482</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#2     mbb  9 0.1023012</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#3     cbb  8 0.2031448</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#4    tmbb  4 0.2654746</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#5    tcbb  9 0.4048711</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># simulate univariate time series data</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">289805</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>ts <span class="ot">&lt;-</span> <span class="fu">arima.sim</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">model =</span> <span class="fu">list</span>(<span class="at">ar =</span> <span class="fl">0.8</span>, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>)), <span class="at">sd =</span> <span class="dv">1</span>) </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># get the optimal block length table</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>OBL<span class="sc">::</span><span class="fu">blockboot</span>(<span class="at">ts =</span> ts, <span class="at">R =</span> <span class="dv">100</span>, <span class="at">seed =</span> <span class="dv">6</span>, <span class="at">n_cores =</span> <span class="dv">2</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#  Methods lb      RMSE</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#1     nbb  9 0.2402482</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#2     mbb  9 0.1023012</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#3     cbb  8 0.2031448</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#4    tmbb  4 0.2654746</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#5    tcbb  9 0.4048711</span></span></code></pre></div>
+<p>The suction output a lollipop chart with 5 pops for the 5 methods
+separated with 5 distinct colours while the method with red lollipop
+indicates the least desired method with the highest RMSE and the method
+with green lollipop indicates the preferred method having the lowest
+RMSE. The <strong>legend</strong> beside the chart indicate the optimum
+block length for each method.</p>
+</div>
+<div id="examples2" class="section level3">
+<h3>Examples2</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># simulate univariate time series data</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">289805</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>ts <span class="ot">&lt;-</span> <span class="fu">arima.sim</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">model =</span> <span class="fu">list</span>(<span class="at">ar =</span> <span class="fl">0.8</span>, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>)), <span class="at">sd =</span> <span class="dv">1</span>) </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># get the optimal block length table</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>OBL<span class="sc">::</span><span class="fu">lolliblock</span>(<span class="at">ts =</span> ts, <span class="at">R =</span> <span class="dv">100</span>, <span class="at">seed =</span> <span class="dv">6</span>, <span class="at">n_cores =</span> <span class="dv">2</span>)</span></code></pre></div>
 </div>
 </div>
 <div id="vignette" class="section level2">
