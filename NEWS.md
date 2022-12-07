@@ -1,3 +1,8 @@
+# OBL 0.2.1
+
+- lolliblock function is updated to plot the optimal block length for each method in different colours
+- NOTE burg fixed
+
 # OBL 0.2.0
 
 - lolliblock function is add to plot the optimal block length for each method
